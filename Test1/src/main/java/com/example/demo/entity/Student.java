@@ -1,9 +1,6 @@
 package com.example.demo.entity;
 
 import java.io.Serializable;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-
 import javax.persistence.*;
 
 import org.hibernate.annotations.Proxy;
@@ -143,7 +140,7 @@ public class Student implements Serializable {
 	public void setPersonalName(String personalName) {
 		this.personalName = personalName;
 	}
-	@OneToMany(mappedBy="student", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="student", fetch=FetchType.EAGER,cascade = CascadeType.ALL)
 	@JsonIgnore
 	public Set<Student_Course_Enrolment> getStudentCourseEnrolments() {
 		return this.studentCourseEnrolments;

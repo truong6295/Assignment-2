@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,9 +19,10 @@ import com.example.demo.service.CourseService;
 
 @RestController
 @RequestMapping("/api")
+@Transactional
 public class CourseController {
 	@Autowired
-    CourseService courseService;
+    private CourseService courseService;
     //view all
     @RequestMapping(value = "/course/", method = RequestMethod.GET)
     public ResponseEntity<List<Cours>> listAllCourse() {
@@ -39,11 +42,27 @@ public class CourseController {
     @RequestMapping(value = "/course/",method = RequestMethod.POST)
     public ResponseEntity<?> courseSubjectcourseAuthorsAndTutor(String courseDescription,String courseName,
     		String otherDetails,String subjectId,String courseAuthorsAndTutorId, UriComponentsBuilder ucBuilder){
-        Cours courses=courseService.add(courseDescription, courseName, otherDetails, Integer.parseInt(subjectId), Integer.parseInt(courseAuthorsAndTutorId));
+        Cours courses=courseService.add(courseDescription, courseName, otherDetails,
+        		Integer.parseInt(subjectId), Integer.parseInt(courseAuthorsAndTutorId));
         HttpHeaders headers = new HttpHeaders();
         headers.setLocation(ucBuilder.path("/api/course/{id}").buildAndExpand(courses.getCourseId()).toUri());
         return new ResponseEntity<String>(headers, HttpStatus.CREATED);
     }
     //update
-    
+    @RequestMapping(value = "/course/", method = RequestMethod.PUT)
+    public ResponseEntity<?> updateCourse(String courseId ,String courseDescription,String courseName,
+    		String otherDetails,String subjectId,String courseAuthorsAndTutorId){
+        Cours currentCourse = courseService.update(Integer.parseInt(courseId), courseDescription, 
+        		courseName, otherDetails, Integer.parseInt(subjectId), Integer.parseInt(courseAuthorsAndTutorId));
+        return new ResponseEntity<Cours>(currentCourse, HttpStatus.OK);
+    }
+    //delete
+    @RequestMapping(value = "/course/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteCourse(@PathVariable("id") Integer courseId) {
+        if(courseService.delete(courseId)) {
+        	return new ResponseEntity<Cours>(HttpStatus.NO_CONTENT);
+        }
+        else
+        	return new ResponseEntity("loi xoa.course voi id {} khong co.",HttpStatus.NOT_FOUND);
+    }
 }

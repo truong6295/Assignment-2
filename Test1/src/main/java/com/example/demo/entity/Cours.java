@@ -3,6 +3,8 @@ package com.example.demo.entity;
 import java.io.Serializable;
 import javax.persistence.*;
 
+import org.hibernate.annotations.Proxy;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Set;
@@ -15,6 +17,7 @@ import java.util.Set;
 @Entity
 @Table(name="Courses")
 @NamedQuery(name="Cours.findAll", query="SELECT c FROM Cours c")
+@Proxy(lazy=false)
 public class Cours implements Serializable {
 	private static final long serialVersionUID = 1L;
 

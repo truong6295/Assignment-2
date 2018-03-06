@@ -1,61 +1,45 @@
 package com.example.demo.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.dao.CourseRepository;
+import com.example.demo.dao.StudentRepository;
 import com.example.demo.dao.Student_Course_EnrolmentRepository;
-import com.example.demo.dao.Student_Tests_TakenRepository;
 import com.example.demo.entity.Cours;
 import com.example.demo.entity.Student;
 import com.example.demo.entity.Student_Course_Enrolment;
-import com.example.demo.entity.Student_Tests_Taken;
 @Service
 public class Student_Course_EnrolmentService {
 	@Autowired
 	private Student_Course_EnrolmentRepository studentCourseEnrolmentRepository;
 	@Autowired
-	private Student_Tests_TakenRepository studentTestTakenRepository;
+	private StudentRepository studentRepository;
+	@Autowired
+	private CourseRepository courseRepository;
 	//add
-	public Student_Course_Enrolment add(Date dateOfCompletion,Date dateOfEnrolment,String otherDetails,Student student,Cours cours) {
-		Student_Course_Enrolment studentCourseEnrolment=new Student_Course_Enrolment(dateOfCompletion, dateOfEnrolment, otherDetails, student, cours);
+	public Student_Course_Enrolment add(Date dateOfCompletion,Date dateOfEnrolment,String otherDetails,
+			int studentId,int courseId) {
+		Student_Course_Enrolment studentCourseEnrolment=new Student_Course_Enrolment(dateOfCompletion, dateOfEnrolment, otherDetails,
+				studentRepository.getOne(studentId), courseRepository.getOne(courseId));
 		if(studentCourseEnrolmentRepository.save(studentCourseEnrolment) != null)
 			return studentCourseEnrolment;
 		return null;
 	}
-	//add studentTestTaken
-	public boolean add(Date dateOfCompletion,Date dateOfEnrolment,String otherDetails,Student student,Cours cours,Date dateTestTaken,String otherDetailsTest,String testResult) {
-		Student_Course_Enrolment studentCourseEnrolment=new Student_Course_Enrolment(dateOfCompletion, dateOfEnrolment, otherDetails, student, cours);
-		Student_Tests_Taken studentTestTaken =new Student_Tests_Taken();
-		studentTestTaken.setDateTestTaken(dateTestTaken);
-		studentTestTaken.setOtherDetails(otherDetailsTest);
-		studentTestTaken.setTestResult(testResult);
-		studentTestTaken.setStudentCourseEnrolment(studentCourseEnrolment);
-		studentCourseEnrolment.addStudentTestsTaken(studentTestTaken);
-		if(studentCourseEnrolmentRepository.save(studentCourseEnrolment) != null)
-			return true;
-		return false;
-	}
+	
 	//update
-	public boolean update(int id,Date dateOfCompletion,Date dateOfEnrolment,String otherDetails,Student student,Cours cours) {
-		Student_Course_Enrolment studentCourseEnrolment=new Student_Course_Enrolment(dateOfCompletion, dateOfEnrolment, otherDetails, student, cours);
+	public Student_Course_Enrolment update(int id,Date dateOfCompletion,Date dateOfEnrolment,String otherDetails,int studentId,int courseId) {
+		Student_Course_Enrolment studentCourseEnrolment=new Student_Course_Enrolment(dateOfCompletion, dateOfEnrolment, otherDetails, 
+				studentRepository.getOne(studentId), courseRepository.getOne(courseId));
 		studentCourseEnrolment.setRegistrationId(id);
 		if(studentCourseEnrolmentRepository.save(studentCourseEnrolment) != null)
-			return true;
-		return false;
+			return studentCourseEnrolment;
+		return null;
 	}
-	//update studentTestTaken
-	public boolean update(int id,Date dateTestTaken,String otherDetailsTest,String testResult) {
-		Student_Tests_Taken studentTestTaken =new Student_Tests_Taken();
-		studentTestTaken.setDateTestTaken(dateTestTaken);
-		studentTestTaken.setOtherDetails(otherDetailsTest);
-		studentTestTaken.setTestResult(testResult);
-		studentTestTaken.setStudentCourseEnrolment(studentCourseEnrolmentRepository.getOne(id));
-		if(studentCourseEnrolmentRepository.save(studentCourseEnrolmentRepository.getOne(id)) != null)
-			return true;
-		return false;
-	}
+	
 	//delete
 	public boolean delete(int id) {
 		if(studentCourseEnrolmentRepository.exists(id)) {
@@ -64,5 +48,14 @@ public class Student_Course_EnrolmentService {
 		}
 		return false;
 	}
-	
+	//view 
+		public List<Student_Course_Enrolment> viewAll(){
+			List<Student_Course_Enrolment> studentCourseEnrolments= studentCourseEnrolmentRepository.findAll();
+			return studentCourseEnrolments;
+		}
+		//view 1 entity
+		public Student_Course_Enrolment viewId(int id) {
+			Student_Course_Enrolment studentCourseEnrolments=studentCourseEnrolmentRepository.findOne(id);
+			return studentCourseEnrolments;
+		}
 }

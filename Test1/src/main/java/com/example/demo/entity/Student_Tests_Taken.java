@@ -2,9 +2,6 @@ package com.example.demo.entity;
 
 import java.io.Serializable;
 import javax.persistence.*;
-
-import net.minidev.json.annotate.JsonIgnore;
-
 import java.util.Date;
 
 
@@ -17,14 +14,9 @@ import java.util.Date;
 @AssociationOverrides({
     @AssociationOverride(name = "primaryKey.studentCourseEnrolment",
         joinColumns = @JoinColumn(name = "registration_id")) })
+
 public class Student_Tests_Taken implements Serializable {
 	private static final long serialVersionUID = 1L;
-	/*
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="registration_id")
-	private int registrationId;
-	*/
 	
 	private Student_Tests_TakenId primaryKey = new Student_Tests_TakenId();
 
@@ -37,12 +29,12 @@ public class Student_Tests_Taken implements Serializable {
 	
 	private String testResult;
 
-	//bi-directional one-to-one association to Student_Course_Enrolment
-	//@ManyToOne
-	//@JoinColumn(name="registration_id")
-	//private Student_Course_Enrolment studentCourseEnrolment;
-
 	public Student_Tests_Taken() {
+	}
+	public Student_Tests_Taken(Date dateTestTaken,String otherDetails,String testResult) {
+		this.dateTestTaken=dateTestTaken;
+		this.otherDetails=otherDetails;
+		this.testResult=testResult;
 	}
 	
 	@EmbeddedId
@@ -79,8 +71,8 @@ public class Student_Tests_Taken implements Serializable {
 	public void setTestResult(String testResult) {
 		this.testResult = testResult;
 	}
-	@Transient
 	
+	@Transient
 	public Student_Course_Enrolment getStudentCourseEnrolment() {
 		return getPrimaryKey().getStudentCourseEnrolment();
 	}

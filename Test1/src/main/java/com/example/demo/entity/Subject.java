@@ -3,7 +3,7 @@ package com.example.demo.entity;
 import java.io.Serializable;
 import javax.persistence.*;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.util.Set;
 
@@ -65,7 +65,7 @@ public class Subject implements Serializable {
 		this.subjectName = subjectName;
 	}
 	@OneToMany(mappedBy="subject", fetch=FetchType.EAGER,cascade = CascadeType.ALL)
-	@JsonBackReference
+	@JsonIgnore
 	public Set<Cours> getCourses() {
 		return this.courses;
 	}

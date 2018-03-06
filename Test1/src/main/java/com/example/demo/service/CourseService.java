@@ -27,15 +27,16 @@ public class CourseService {
 		return null;	
 	}
 	// update
-	public Cours update(int id,String courseDescription,String courseName,String otherDetails,Subject subject,Course_Authors_and_Tutor courseAuthorsAndTutor) {
-		Cours course=new Cours(courseDescription, courseName, otherDetails, subject, courseAuthorsAndTutor);
+	public Cours update(int id,String courseDescription,String courseName,String otherDetails,int subjectId,int courseAuthorsAndTutorId) {
+		Cours course=new Cours(courseDescription, courseName, otherDetails, subjectRepository.getOne(subjectId), courseAuthorsAndTutorRepository.getOne(courseAuthorsAndTutorId));
 		course.setCourseId(id);
 		if(courseRepository.save(course)!=null)
 			return course;
 		return null;	
 	}
 	// delete
-	public boolean delete(int id) {
+	public boolean delete(Integer id) {
+		
 		if(courseRepository.exists(id)) {
 			courseRepository.delete(id);
 			return true;

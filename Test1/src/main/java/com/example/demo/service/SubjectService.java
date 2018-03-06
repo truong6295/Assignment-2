@@ -1,5 +1,7 @@
 package com.example.demo.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +20,13 @@ public class SubjectService {
 			return null;
 	}
 	//update subject
-	public boolean update(int id,String eg_Database_Design,String subjectName) {
+	public Subject update(int id,String eg_Database_Design,String subjectName) {
 		Subject subject=new Subject(eg_Database_Design, subjectName);
 		subject.setSubjectId(id);
 		if(subjectRepository.save(subject)!=null)
-			return true;
+			return subject;
 		else
-			return false;
+			return null;
 	}
 	//delete
 	public boolean delete(int id) {
@@ -34,4 +36,14 @@ public class SubjectService {
 		}
 		return false;
 	}
+	//view 
+		public List<Subject> viewAll(){
+			List<Subject> subjects= subjectRepository.findAll();
+			return subjects;
+		}
+		//view 1 entity
+		public Subject viewId(int id) {
+			Subject subjects=subjectRepository.findOne(id);
+			return subjects;
+		}
 }

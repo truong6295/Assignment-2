@@ -15,14 +15,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.example.demo.entity.Student;
 import com.example.demo.service.StudentService;
 
-
-
 @RestController
 @RequestMapping("/api")
 public class StudentController {
 	 	private static final SimpleDateFormat formatHHmm = new SimpleDateFormat("yyyy-MM-dd");
 	    @Autowired
-	    StudentService studentService;
+	    private StudentService studentService;
 	    //view all
 	    @RequestMapping(value = "/student/", method = RequestMethod.GET)
 	    public ResponseEntity<List<Student>> listAllStudent() {
@@ -34,7 +32,7 @@ public class StudentController {
 	    }
 	    //view 1 entity
 	    @RequestMapping(value = "/student/{id}", method = RequestMethod.GET)
-	    public ResponseEntity<?> getUser(@PathVariable("id") int id) {
+	    public ResponseEntity<?> getUStudent(@PathVariable("id") int id) {
 	        Student students = studentService.viewId(id);
 	        return new ResponseEntity<Student>(students, HttpStatus.OK);
 	    }
@@ -50,7 +48,6 @@ public class StudentController {
 	        return new ResponseEntity<String>(headers, HttpStatus.CREATED);
 	    }
 	    //update
-	    
 	    @RequestMapping(value = "/student/", method = RequestMethod.PUT)
 	    public ResponseEntity<?> updateUser(String studentId ,String dateOfLatestLogon,String dateOfRegistration,String familyName,String loginName,String middleName,String otherDetails,String password,String personalName) throws ParseException{
 	        int id=Integer.parseInt(studentId);
@@ -60,8 +57,8 @@ public class StudentController {
 	    }
 	    //delete 1 entity
 	    @RequestMapping(value = "/student/{id}", method = RequestMethod.DELETE)
-	    public ResponseEntity<?> deleteUser(@PathVariable("id") int id) {
-	        if(studentService.delete(id)) {
+	    public ResponseEntity<?> deleteUser(@PathVariable("id") int studentId) {
+	        if(studentService.delete(studentId)) {
 	        	
 	        	return new ResponseEntity<Student>(HttpStatus.NO_CONTENT);
 	        }
